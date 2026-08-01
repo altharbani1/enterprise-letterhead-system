@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة حوكمة المراسلات والعقود والسندات وعروض الأسعار والمحاضر - إدارة الشركات</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;800&family=Cinzel:wght@500;700;900&family=Montserrat:wght@400;600;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="style.css">
+    <!-- html2canvas and html2pdf for direct PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="app-body">
+
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+        <div class="header-brand">
+            <img src="logo.jpg" id="active-company-header-logo" alt="Logo" class="header-logo-img">
+            <div class="header-titles">
+                <h1 id="active-company-header-title">شركة المكتب العاشر القابضة</h1>
+                <span class="header-subtitle">منظومة حوكمة المراسلات والعقود والسندات والمحاضر</span>
+            </div>
+        </div>
+
+        <!-- FULL STABLE MODE SWITCHER PILL (6 MODES) -->
+        <div class="mode-switcher-pill">
+            <button class="mode-btn active" id="btn-mode-letter" onclick="switchAppMode('letter')">
+                <i class="fa-solid fa-envelope-open-text"></i> <span>الخطابات</span>
+            </button>
+            <button class="mode-btn" id="btn-mode-contract" onclick="switchAppMode('contract')">
+                <i class="fa-solid fa-file-signature"></i> <span>العقود</span>
+            </button>
+            <button class="mode-btn" id="btn-mode-receipt" onclick="switchAppMode('receipt')">
+                <i class="fa-solid fa-receipt"></i> <span>سند قبض</span>
+            </button>
+            <button class="mode-btn" id="btn-mode-quotation" onclick="switchAppMode('quotation')">
+                <i class="fa-solid fa-calculator"></i> <span>عرض سعر</span>
+            </button>
+            <button class="mode-btn" id="btn-mode-hr" onclick="switchAppMode('hr')">
+                <i class="fa-solid fa-id-card-clip"></i> <span>إداري وHR</span>
+            </button>
+            <button class="mode-btn" id="btn-mode-reports" onclick="switchAppMode('reports')">
+                <i class="fa-solid fa-clipboard-list"></i> <span>المحاضر</span>
+            </button>
+        </div>
+
+        <!-- COMPANY SWITCHER DROPDOWN -->
+        <div class="company-switcher-bar">
+            <label><i class="fa-solid fa-building-flag"></i> الشركة:</label>
+            <select id="company-select-dropdown" class="company-dropdown" onchange="switchCompanyProfile(this.value)">
+                <option value="company_1" selected>🏢 شركة المكتب العاشر القابضة</option>
+                <option value="company_2">🏗️ شركة أنظمة المدينة للمقاولات (CLT PRO.CO)</option>
+                <option value="company_3">☀️ مؤسسة تبادل الشرق للمقاولات (EAST EXCHANGE EST)</option>
+                <option value="custom_new">+ إضافة شركة جديدة...</option>
+            </select>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="openArchiveModal()">
+                <i class="fa-solid fa-box-archive"></i> الأرشيف (<span id="archive-count-badge">0</span>)
+            </button>
+            <button class="btn btn-word" onclick="exportWordDocument()">
+                <i class="fa-solid fa-file-word"></i> Word
+            </button>
+            <button class="btn btn-whatsapp" onclick="shareWhatsApp()">
+                <i class="fa-brands fa-whatsapp"></i> واتساب
+            </button>
+            <button class="btn btn-pdf" onclick="exportDirectPDF()">
+                <i class="fa-solid fa-file-pdf"></i> تصدير PDF
+            </button>
+            <button class="btn btn-gold" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> طباعة
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout Container -->
+    <div class="main-layout">
+        
+        <!-- RESTRUCTURED SIDEBAR (4 MASTER CATEGORIES) -->
+        <aside class="editor-sidebar no-print">
+            <div class="sidebar-tabs-grouped">
+                <button class="tab-group-btn active" id="tab-btn-group-company" onclick="switchTabGroup('group-company')">
+                    <i class="fa-solid fa-building"></i>
+                    <span>1. الشركة والبنك</span>
+                </button>
+                <button class="tab-group-btn" id="tab-btn-group-builder" onclick="switchTabGroup('group-builder')">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>2. المحتوى والنموذج</span>
+                </button>
+                <button class="tab-group-btn" id="tab-btn-group-tables" onclick="switchTabGroup('group-tables')">
+                    <i class="fa-solid fa-table-list"></i>
+                    <span>3. الجدول والمالية</span>
+                </button>
+                <button class="tab-group-btn" id="tab-btn-group-design" onclick="switchTabGroup('group-design')">
+                    <i class="fa-solid fa-stamp"></i>
+                    <span>4. المظهر والتوقيع</span>
+                </button>
+            </div>
+
+            <!-- GROUP 1: COMPANY & BANKING PROFILES -->
+            <div id="group-company" class="tab-group-content active">
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-building-circle-check"></i> ملف الشركة النشطة</h3>
+                    <div class="company-cards-grid">
+                        <div class="company-profile-card active" id="card-company-1" onclick="switchCompanyProfile('company_1')">
+                            <div class="card-badge">مفعلة</div>
+                            <h4>شركة المكتب العاشر القابضة</h4>
+                            <p>TENTH OFFICE HOLDING COMPANY</p>
+                            <span>س.ت: 7003400145</span>
+                        </div>
+                        <div class="company-profile-card" id="card-company-2" onclick="switchCompanyProfile('company_2')">
+                            <div class="card-badge">مفعلة</div>
+                            <h4>شركة أنظمة المدينة للمقاولات</h4>
+                            <p>CLT PRO.CO</p>
+                            <span>س.ت: 7002168016</span>
+                        </div>
+                        <div class="company-profile-card" id="card-company-3" onclick="switchCompanyProfile('company_3')">
+                            <div class="card-badge">مفعلة</div>
+                            <h4>مؤسسة تبادل الشرق للمقاولات</h4>
+                            <p>EAST EXCHANGE CONTRACTING EST.</p>
+                            <span>س.ت: 7004561230</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-id-card"></i> بيانات الشركة السجل والتواصل</h3>
+                    <div class="form-group">
+                        <label>تغيير الشعار (PNG/JPG):</label>
+                        <div class="file-upload-box">
+                            <input type="file" id="company-logo-file-input" accept="image/*" onchange="handleCompanyLogoUpload(event)">
+                            <button class="btn btn-outline btn-block" onclick="document.getElementById('company-logo-file-input').click()">
+                                <i class="fa-solid fa-upload"></i> رفع شعار للشركة النشطة
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>اسم الشركة (عربي):</label>
+                        <input type="text" id="input-co-ar" class="form-control" value="شركة المكتب العاشر القابضة" oninput="updateCompanyInfo()">
+                    </div>
+                    <div class="form-group">
+                        <label>الوصف / النشاط:</label>
+                        <input type="text" id="input-co-sub" class="form-control" value="شركة قابضة واستثمارية" oninput="updateCompanyInfo()">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم الشركة (إنجليزي):</label>
+                        <input type="text" id="input-co-en" class="form-control" value="TENTH OFFICE" oninput="updateCompanyInfo()">
+                    </div>
+                    <div class="form-group">
+                        <label>الوصف الإنجليزي:</label>
+                        <input type="text" id="input-co-en-sub" class="form-control" value="HOLDING COMPANY" oninput="updateCompanyInfo()">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label>السجل التجاري C.R:</label>
+                            <input type="text" id="input-co-cr" class="form-control" value="7003400145" oninput="updateCompanyInfo()">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>الرقم الضريبي VAT:</label>
+                            <input type="text" id="input-co-vat" class="form-control" value="300123456700003" oninput="updateCompanyInfo()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label>الهاتف الرئيسي:</label>
+                            <input type="text" id="input-co-phone" class="form-control" value="+966 11 400 1010" oninput="updateCompanyInfo()">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>البريد الإلكتروني:</label>
+                            <input type="text" id="input-co-email" class="form-control" value="info@tenthoffice.sa" oninput="updateCompanyInfo()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>الموقع الإلكتروني:</label>
+                        <input type="text" id="input-co-web" class="form-control" value="www.tenthoffice.sa" oninput="updateCompanyInfo()">
+                    </div>
+                    <div class="form-group">
+                        <label>العنوان والمقر الرئيسي:</label>
+                        <input type="text" id="input-co-address" class="form-control" value="الرياض - برج المكتب العاشر - طريق الملك فهد" oninput="updateCompanyInfo()">
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-building-columns"></i> الحساب البنكي المعتمد للسداد</h3>
+                    <div class="form-group checkbox-group mb-2">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="show-bank-card-check" checked onchange="toggleBankCardDisplay(this.checked)">
+                            <span class="checkmark"></span> إظهار بطاقة الحساب البنكي المعتمد
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>اسم البنك:</label>
+                        <input type="text" id="input-bank-name" class="form-control" value="البنك الأهلي السعودي (SNB)" oninput="updateBankCardInfo()">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم صاحب الحساب:</label>
+                        <input type="text" id="input-bank-holder" class="form-control" value="شركة المكتب العاشر القابضة" oninput="updateBankCardInfo()">
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الآيبان IBAN:</label>
+                        <input type="text" id="input-bank-iban" class="form-control" value="SA44 1000 0001 2345 6789 0101" oninput="updateBankCardInfo()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP 2: LIVE CONTENT BUILDER & PRESETS -->
+            <div id="group-builder" class="tab-group-content">
+                
+                <!-- DYNAMIC PANEL 1: STANDARD LETTER CONTROLS -->
+                <div class="mode-panel mode-panel-letter">
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-fingerprint"></i> أرشفة وتاريخ الخطاب</h3>
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label>التاريخ:</label>
+                                <input type="text" id="input-date" class="form-control" value="19 صفر 1448 هـ | 01 أغسطس 2026 م" oninput="updateContent()">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>الرقم الإشاري:</label>
+                                <input type="text" id="input-ref" class="form-control" value="HLD-2026-001" oninput="updateContent()">
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-block mb-2" onclick="generateNewRefCode()">
+                            <i class="fa-solid fa-rotate"></i> توليد رقم إشاري تسلسلي جديد
+                        </button>
+                        <button class="btn btn-gold btn-block" onclick="saveCurrentLetterToArchive()">
+                            <i class="fa-solid fa-box-archive"></i> حفظ الوثيقة بالأرشيف
+                        </button>
+                    </div>
+
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-envelope-open-text"></i> موجه الخطاب والموضوع</h3>
+                        <div class="form-group">
+                            <label>الموجه إليه (الجهة / المستلم):</label>
+                            <input type="text" id="input-recipient" class="form-control" value="السادة / شركة الاستثمارات المستقبلية المحترمين" oninput="updateContent()">
+                        </div>
+                        <div class="form-group">
+                            <label>الموضوع:</label>
+                            <input type="text" id="input-subject" class="form-control" value="الموضوع: اعتماد الشراكة الاستثمارية ومذكرة التفاهم للربع الثالث 2026" oninput="updateContent()">
+                        </div>
+                        <div class="form-group">
+                            <label>عبارة التحية:</label>
+                            <input type="text" id="input-salutation" class="form-control" value="السلام عليكم ورحمة الله وبركاته،،،" oninput="updateContent()">
+                        </div>
+                        <div class="form-group">
+                            <label>نص الخطاب / الديباجة:</label>
+                            <textarea id="input-body" class="form-control" rows="6" oninput="updateContent()">يسر مجلس إدارة شركة المكتب العاشر القابضة أن يبعث إليكم بأطيب التحيات والتقدير.
+
+إشارة إلى المباحثات الرسمية والاجتماعات التنسيقية المنعقدة مؤخراً بشأن تعزيز التعاون الاستثماري والتطوير العقاري المشترك، نفيدكم بموافقتنا المبدئية على بنود مذكرة التفاهم المقترحة.
+
+نؤكد لكم حرص شركة المكتب العاشر القابضة على دفع عجلة الاستثمار المشترك وتحقيق تطلعات الشركاء وفق أعلى معايير الحوكمة والجودة.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>عبارة الختام:</label>
+                            <input type="text" id="input-closing" class="form-control" value="وتقبلوا فائق الاحترام والتقدير،،،" oninput="updateContent()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC PANEL 2: CONTRACT BUILDER -->
+                <div class="mode-panel mode-panel-contract" style="display:none;">
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-copy"></i> تعدد صفحات العقد وترويساتها</h3>
+                        <div class="form-group">
+                            <label>عدد صفحات العقد بـ ترويسة وتذييل كاملين:</label>
+                            <select id="contract-pages-count-select" class="form-control" onchange="setPageLayoutMode(this.value)">
+                                <option value="1">📄 صفحة واحدة (Single A4 Page)</option>
+                                <option value="2" selected>📑 صفحتان مستقلتان (2 Full A4 Pages with Headers)</option>
+                                <option value="3">📚 3 صفحات مستقلة (3 Full A4 Pages with Headers)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>حالة الاعتماد القانونية للعقد:</label>
+                            <select id="contract-lifecycle-select" class="form-control" onchange="updateContractLifecycleBadge(this.value)">
+                                <option value="status-draft" selected>🟡 مسودة عقد - غير نهائي (Draft)</option>
+                                <option value="status-review">🔵 قيد التوقيع والمراجعة (Under Review)</option>
+                                <option value="status-active">🟢 عقد ساري ومفعل (Active Contract)</option>
+                                <option value="status-completed">🟣 عقد مكتمل ومسلم (Completed)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-users"></i> بيانات أطراف العقد</h3>
+                        <div class="form-group">
+                            <label>الطرف الأول (يمثل الشركة):</label>
+                            <input type="text" id="input-p1-rep" class="form-control" value="م. عبدالملك بن سلطان (الرئيس التنفيذي)" oninput="updateContractParties()">
+                        </div>
+                        <div class="form-group">
+                            <label>الطرف الثاني (اسم العميل / المقاول):</label>
+                            <input type="text" id="input-p2-name" class="form-control" value="شركة الاستثمارات المستقبلية والتطوير" oninput="updateContractParties()">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label>سجل/هوية الطرف الثاني:</label>
+                                <input type="text" id="input-p2-cr" class="form-control" value="1010998877" oninput="updateContractParties()">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>مُمثل الطرف الثاني:</label>
+                                <input type="text" id="input-p2-rep" class="form-control" value="أ. خالد بن أحمد Al-Otaibi" oninput="updateContractParties()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-scale-balanced"></i> البنود والشروط القانونية بالعقد</h3>
+                        <div class="form-group checkbox-group mb-2">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="clause-jurisdiction-check" checked onchange="renderLegalClauses()">
+                                <span class="checkmark"></span> ⚖️ بند الاختصاص القضائي والمحاكم السعودية
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group mb-2">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="clause-penalty-check" checked onchange="renderLegalClauses()">
+                                <span class="checkmark"></span> ⚠️ بند الشرط الجزائي وغرامة التأخير
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group mb-2">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="clause-force-majeure-check" checked onchange="renderLegalClauses()">
+                                <span class="checkmark"></span> 🛡️ بند القوة القاهرة والظروف الطارئة
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group mb-2">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="clause-nda-check" checked onchange="renderLegalClauses()">
+                                <span class="checkmark"></span> 🔒 بند سرية المعلومات (NDA)
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group mb-2">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="clause-warranty-check" checked onchange="renderLegalClauses()">
+                                <span class="checkmark"></span> 🔧 بند فترة الضمان والصيانة (سنتان)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC PANEL 3: RECEIPT VOUCHER BUILDER -->
+                <div class="mode-panel mode-panel-receipt" style="display:none;">
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-file-invoice-dollar"></i> بيانات سند القبض المالي</h3>
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label>رقم سند القبض:</label>
+                                <input type="text" id="input-receipt-no" class="form-control" value="REC-2026-089" oninput="updateReceiptVoucher()">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>المبلغ بالأرقام (ريال):</label>
+                                <input type="number" id="input-receipt-amount" class="form-control" value="150000" oninput="updateReceiptVoucher()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>استلمنا من السيد / السادة:</label>
+                            <input type="text" id="input-receipt-payer" class="form-control" value="شركة الاستثمارات المستقبلية والتطوير العقاري" oninput="updateReceiptVoucher()">
+                        </div>
+                        <div class="form-group">
+                            <label>طريقة السداد:</label>
+                            <select id="input-receipt-pay-method" class="form-control" onchange="updateReceiptVoucher()">
+                                <option value="bank" selected>💳 تحويل بنكي (Bank Transfer)</option>
+                                <option value="cheque">📝 شيك بنكي (Cheque)</option>
+                                <option value="cash">💵 نقداً (Cash)</option>
+                                <option value="mada">📲 مدى / بطاقة (Mada / Card)</option>
+                            </select>
+                        </div>
+                        <div class="form-row" id="cheque-details-row" style="display: none;">
+                            <div class="form-group col-6">
+                                <label>رقم الشيك:</label>
+                                <input type="text" id="input-receipt-cheque-no" class="form-control" value="CHK-887766" oninput="updateReceiptVoucher()">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>البنك المسحوب عليه:</label>
+                                <input type="text" id="input-receipt-cheque-bank" class="form-control" value="مصرف الراجحي" oninput="updateReceiptVoucher()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>وذلك مقابل / عن:</label>
+                            <textarea id="input-receipt-reason" class="form-control" rows="2" oninput="updateReceiptVoucher()">الدفعة الأولى المستحقة بموجب العقد رقم (2026/04) الخاص بتوريد وتركيب كاميرات المراقبة.</textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label>اسم المحاسب:</label>
+                                <input type="text" id="input-receipt-accountant" class="form-control" value="أحمد بن صالح" oninput="updateReceiptVoucher()">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>اسم المدير المالي / CEO:</label>
+                                <input type="text" id="input-receipt-manager" class="form-control" value="م. عبدالملك بن سلطان" oninput="updateReceiptVoucher()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC PANEL 4: QUOTATION BUILDER -->
+                <div class="mode-panel mode-panel-quotation" style="display:none;">
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-file-invoice"></i> إعدادات عرض السعر التجاري</h3>
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label>رقم عرض السعر:</label>
+                                <input type="text" id="input-quo-no" class="form-control" value="QUO-2026-042" oninput="updateQuotationModule()">
+                            </div>
+                            <div class="form-group col-6">
+                                <label>صلاحية العرض:</label>
+                                <input type="text" id="input-quo-validity" class="form-control" value="ساري لمدة 15 يوماً" oninput="updateQuotationModule()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>اسم العميل الموجه إليه:</label>
+                            <input type="text" id="input-quo-client" class="form-control" value="شركة الاستثمارات المستقبلية والتطوير" oninput="updateQuotationModule()">
+                        </div>
+                        <div class="form-group">
+                            <label>اسم المشروع:</label>
+                            <input type="text" id="input-quo-project" class="form-control" value="مشروع التوريدات الكهروميكانيكية وأنظمة المراقبة" oninput="updateQuotationModule()">
+                        </div>
+                        <div class="form-group">
+                            <label>شروط العرض والتسليم:</label>
+                            <textarea id="input-quo-terms" class="form-control" rows="3" oninput="updateQuotationModule()">1. الأسعار الموضحة أعلاه تشمل ضريبة القيمة المضافة 15%.
+2. الدفع: 50% دفعة مقدمة عند التعميد، و50% بعد إتمام التسليم الابتدائي.
+3. الضمان: ضمان شامل لمدة سنتين ميلاديتين على كافة الكاميرات والأجهزة الموردة.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC PANEL 5: HR & REPORTS PRESETS -->
+                <div class="mode-panel mode-panel-reports" style="display:none;">
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-id-card-clip"></i> نماذج الموارد البشرية والإدارة</h3>
+                        <button class="btn btn-gold btn-block mb-2" onclick="loadHrPreset('car_auth')">🚗 خطاب تفويض قيادة مركبة شركة</button>
+                        <button class="btn btn-gold btn-block mb-2" onclick="loadHrPreset('job_offer')">💼 خطاب عرض عمل وظيفي رسمـي (Job Offer)</button>
+                        <button class="btn btn-gold btn-block mb-2" onclick="loadHrPreset('subcontractor_auth')">🏗️ خطاب تعميد وتكليف مقاول باطن</button>
+                        <button class="btn btn-gold btn-block" onclick="loadHrPreset('govt_auth')">🛡️ خطاب تفويض مراجعة الجوازات والجهات الحكومية</button>
+                    </div>
+
+                    <div class="section-card">
+                        <h3><i class="fa-solid fa-clipboard-list"></i> المحاضر والتقارير الميدانية</h3>
+                        <button class="btn btn-outline btn-block mb-2" onclick="loadReportPreset('site_handover')">🔑 محضر تسليم موقع مشروع لـ المقاول</button>
+                        <button class="btn btn-outline btn-block mb-2" onclick="loadReportPreset('project_completion')">✅ محضر تسليم ابتدائي / نهائي لـ المشروع</button>
+                        <button class="btn btn-outline btn-block" onclick="loadReportPreset('board_meeting')">🏛️ محضر اجتماع مجلس إدارة رسمي (Board Minutes)</button>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-signature"></i> بيانات الموقّع المعتمد</h3>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label>اسم الموقّع:</label>
+                            <input type="text" id="input-sign-name" class="form-control" value="م. عبدالملك بن سلطان" oninput="updateContent()">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>المسمى الوظيفي:</label>
+                            <input type="text" id="input-sign-title" class="form-control" value="الرئيس التنفيذي" oninput="updateContent()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUP 3: DYNAMIC BOQ TABLE & MATH ENGINE -->
+            <div id="group-tables" class="tab-group-content">
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-sliders"></i> إعدادات وتصميم الجدول</h3>
+                    <div class="form-group checkbox-group mb-2">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="show-table-check" checked onchange="toggleTableDisplay(this.checked)">
+                            <span class="checkmark"></span> إظهار الجدول التفاعلي في المستند
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-group mb-2">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="calc-vat-check" checked onchange="toggleVatCalculation(this.checked)">
+                            <span class="checkmark"></span> تفعيل الجمع التلقائي والضريبة (15% VAT)
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-group mb-2">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="show-tafqeet-check" checked onchange="toggleTafqeetDisplay(this.checked)">
+                            <span class="checkmark"></span> إظهار التفقيط الصريح للمبلغ بالحروف
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>نمط ومظهر نمط الجدول:</label>
+                        <select id="table-style-select" class="form-control" onchange="changeTableTheme(this.value)">
+                            <option value="table-theme-royal" selected>👑 النمط الملكي (رأس أسود/كحلي وإطار ذهبي)</option>
+                            <option value="table-theme-modern">📐 النمط العصري الهندسي (رمادي مخطط)</option>
+                            <option value="table-theme-brand">🎨 نمط هوية الشركة النشطة</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-file-excel"></i> استيراد وتصدير إكسل CSV</h3>
+                    <div class="form-row mb-2">
+                        <input type="file" id="excel-file-input" accept=".csv" style="display:none;" onchange="importCsvToTable(event)">
+                        <button class="btn btn-outline col-6" onclick="document.getElementById('excel-file-input').click()">
+                            <i class="fa-solid fa-file-import"></i> استيراد CSV
+                        </button>
+                        <button class="btn btn-gold col-6" onclick="exportTableToCsv()">
+                            <i class="fa-solid fa-file-export"></i> تصدير إكسل
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-list-check"></i> إدارة البنود والصفوف</h3>
+                    <div id="sidebar-table-rows-container">
+                        <!-- Dynamic Sidebar Row Inputs Rendered Here -->
+                    </div>
+                    <button class="btn btn-gold btn-block mt-2" onclick="addTableRow()">
+                        <i class="fa-solid fa-plus"></i> إضافة بند / صف جديد للجدول
+                    </button>
+                </div>
+            </div>
+
+            <!-- GROUP 4: DESIGN, STAMPS & DIGITAL SIGNATURE -->
+            <div id="group-design" class="tab-group-content">
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-layer-group"></i> اختيار قالب الخطاب الفاخر</h3>
+                    <div class="template-grid">
+                        <div class="template-card active" onclick="selectTemplate('template-executive')" id="card-template-executive">
+                            <div class="template-preview t-exec"></div>
+                            <span>النمط الملكي القابض</span>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('template-modern')" id="card-template-modern">
+                            <div class="template-preview t-modern"></div>
+                            <span>النمط العصري الحديث</span>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('template-sidebar')" id="card-template-sidebar">
+                            <div class="template-preview t-side"></div>
+                            <span>نمط الشريط الجانبي</span>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('template-classic')" id="card-template-classic">
+                            <div class="template-preview t-classic"></div>
+                            <span>النمط الكلاسيكي الفاخر</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-stamp"></i> الختم الرسمي وأختام الاعتماد</h3>
+                    <div class="form-group">
+                        <label>ختم حالة الاعتماد المالي:</label>
+                        <select id="financial-stamp-select" class="form-control" onchange="setFinancialStampOverlay(this.value)">
+                            <option value="none" selected>بدون ختم حالة مالي</option>
+                            <option value="stamp-paid">🟢 مدفوع / PAID</option>
+                            <option value="stamp-approved">🔵 معتمد للصرف النهائي</option>
+                            <option value="stamp-audit">🟡 تحت التدقيق والمراجعة</option>
+                            <option value="stamp-rejected">🔴 مرفوض / Pending Revision</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رفع صورة ختم مخصص (PNG/JPG):</label>
+                        <div class="file-upload-box">
+                            <input type="file" id="stamp-file-input" accept="image/*" onchange="handleStampUpload(event)">
+                            <button class="btn btn-outline btn-block" onclick="document.getElementById('stamp-file-input').click()">
+                                <i class="fa-solid fa-upload"></i> رفع ختم هذه الشركة
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>لون حبر الختم المصمم:</label>
+                        <div class="color-presets">
+                            <button class="color-btn" style="background: #002B66;" onclick="setSealInk('#002B66')" title="أزرق المقاولات"></button>
+                            <button class="color-btn" style="background: #1A365D;" onclick="setSealInk('#1A365D')" title="أزرق رسمي"></button>
+                            <button class="color-btn active" style="background: #C5A059;" onclick="setSealInk('#C5A059')" title="ذهبي ملكي"></button>
+                            <button class="color-btn" style="background: #A71D31;" onclick="setSealInk('#A71D31')" title="أحمر ملائم"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIVE DIGITAL SIGNATURE PAD -->
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-pen-nib"></i> التوقيع الرقمي التفاعلي (Signature Canvas)</h3>
+                    <div class="canvas-signature-box">
+                        <label>ارسم توقيعك بالماوس أو اللمس:</label>
+                        <div class="canvas-wrapper">
+                            <canvas id="sig-pad" width="360" height="110"></canvas>
+                        </div>
+                        <div class="form-row mt-2">
+                            <button class="btn btn-secondary col-6" onclick="clearSignatureCanvas()">
+                                <i class="fa-solid fa-eraser"></i> مسح
+                            </button>
+                            <button class="btn btn-gold col-6" onclick="applySignatureCanvas()">
+                                <i class="fa-solid fa-check"></i> اعتماد التوقيع
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Toolbar Footer in Sidebar -->
+            <div class="sidebar-footer">
+                <button class="btn btn-block btn-pdf mb-2" onclick="exportDirectPDF()">
+                    <i class="fa-solid fa-file-pdf"></i> تصدير ملف PDF مباشر
+                </button>
+                <button class="btn btn-block btn-word mb-2" onclick="exportWordDocument()">
+                    <i class="fa-solid fa-file-word"></i> تصدير مستند Word (.doc)
+                </button>
+                <button class="btn btn-block btn-outline" onclick="downloadAsImage()">
+                    <i class="fa-solid fa-file-image"></i> تصدير كصورة عالية الدقة (PNG)
+                </button>
+            </div>
+        </aside>
+
+        <!-- Preview Area (Paper Display Viewport) -->
+        <main class="preview-area">
+            <div class="preview-toolbar no-print">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="adjustZoom(-0.05)" title="تصغير"><i class="fa-solid fa-minus"></i></button>
+                    <span id="zoom-level">100%</span>
+                    <button class="zoom-btn" onclick="adjustZoom(0.05)" title="تكبير"><i class="fa-solid fa-plus"></i></button>
+                    <button class="zoom-btn" onclick="resetZoom()" title="إعادة تعيين"><i class="fa-solid fa-expand"></i></button>
+                </div>
+                <div class="preview-info">
+                    <i class="fa-solid fa-shield-halved" style="color: #48BB78;"></i> وثيقة رسمية موثقة برمز استجابة وتوقيع معتمد
+                </div>
+            </div>
+
+            <div class="paper-viewport" id="paper-viewport">
+                
+                <!-- PAGE 1 CONTAINER -->
+                <div class="a4-page template-executive" id="letterhead-page-1">
+                    
+                    <!-- Background Watermark -->
+                    <div class="watermark-container">
+                        <img src="logo.jpg" class="paper-watermark-img" alt="Watermark">
+                    </div>
+
+                    <!-- Outer Luxury Pinstripe Frame -->
+                    <div class="outer-pinstripe-frame">
+                        <div class="inner-frame-border"></div>
+                    </div>
+
+                    <!-- STANDALONE CONTRACT LIFECYCLE BADGE BAR -->
+                    <div class="contract-status-bar status-draft" style="display: none;">
+                        <span class="contract-status-text">🟡 مسودة عقد - غير نهائي (Draft)</span>
+                    </div>
+
+                    <!-- OVERLAY FINANCIAL STATUS STAMP -->
+                    <div class="financial-status-stamp" style="display: none;">
+                        <span class="financial-stamp-text">مدفوع / PAID</span>
+                    </div>
+
+                    <!-- TOP HEADER SECTION -->
+                    <header class="paper-header">
+                        <!-- Arabic Side Header -->
+                        <div class="header-brand-ar">
+                            <h2 class="display-co-ar">شركة المكتب العاشر القابضة</h2>
+                            <p class="display-co-sub">شركة قابضة واستثمارية</p>
+                            <span class="display-co-cr">س.ت: <strong class="val-cr">7003400145</strong> | الرقم الضريبي: <strong class="val-vat">300123456700003</strong></span>
+                        </div>
+
+                        <!-- Center Logo Frame -->
+                        <div class="header-logo-wrapper">
+                            <div class="logo-gold-ring">
+                                <img src="logo.jpg" class="paper-main-logo-img" alt="Logo">
+                            </div>
+                        </div>
+
+                        <!-- English Side Header -->
+                        <div class="header-brand-en">
+                            <h2 class="display-co-en">TENTH OFFICE</h2>
+                            <p class="display-co-en-sub">HOLDING COMPANY</p>
+                            <span class="display-co-cr-en"><strong class="val-cr-en">C.R. 7003400145</strong> | VAT: <strong class="val-vat-en">300123456700003</strong></span>
+                        </div>
+                    </header>
+
+                    <!-- Decorative Header Gold Line Divider -->
+                    <div class="header-divider-line">
+                        <div class="diamond-accent">◆</div>
+                    </div>
+
+                    <!-- METADATA BAR (OPTIONAL TOGGLE) -->
+                    <section class="paper-meta-bar plain-meta-text" style="display: none;">
+                        <div class="meta-item">
+                            <span class="meta-label">التاريخ:</span>
+                            <span class="meta-value disp-date"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">الرقم الإشاري:</span>
+                            <span class="meta-value disp-ref"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">المرفقات:</span>
+                            <span class="meta-value disp-attachments"></span>
+                        </div>
+                    </section>
+
+                    <!-- COMMERCIAL QUOTATION CONTAINER (VISIBLE IN QUOTATION MODE) -->
+                    <section class="quotation-module-container" id="paper-quotation-box" style="display: none;">
+                        <div class="quotation-title-bar">
+                            <h2>عرض سعر تجاري رسمي (Commercial Quotation)</h2>
+                        </div>
+                        <div class="quotation-header-grid">
+                            <div class="q-meta">
+                                <div><span>رقم عرض السعر:</span> <strong id="disp-quo-no">QUO-2026-042</strong></div>
+                                <div><span>التاريخ:</span> <strong class="disp-date">19 صفر 1448 هـ</strong></div>
+                                <div><span>صلاحية العرض:</span> <strong id="disp-quo-validity">ساري لمدة 15 يوماً</strong></div>
+                            </div>
+                            <div class="q-client">
+                                <div><span>العميل / الموجه إليها:</span> <strong id="disp-quo-client">شركة الاستثمارات المستقبلية</strong></div>
+                                <div><span>المشروع:</span> <strong id="disp-quo-project">توريد وتركيب كاميرات المراقبة</strong></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- RECEIPT VOUCHER LAYOUT CONTAINER (VISIBLE IN RECEIPT MODE) -->
+                    <section class="receipt-voucher-container" id="paper-receipt-voucher-box" style="display: none;">
+                        <div class="receipt-title-bar">
+                            <h2>سند قبض مالـي رسمي</h2>
+                            <span class="receipt-title-en">PAYMENT RECEIPT VOUCHER</span>
+                        </div>
+
+                        <div class="receipt-header-grid">
+                            <div class="receipt-meta-card">
+                                <div><span>رقم السند:</span> <strong id="disp-receipt-no">REC-2026-089</strong></div>
+                                <div><span>التاريخ:</span> <strong class="disp-date">19 صفر 1448 هـ</strong></div>
+                            </div>
+                            <div class="receipt-amount-card">
+                                <span class="amt-lbl">المبلغ الإجمالي / Amount:</span>
+                                <div class="amt-val"><strong id="disp-receipt-amount">150,000.00</strong> <small>ريال سعودي</small></div>
+                            </div>
+                        </div>
+
+                        <div class="receipt-fields-box">
+                            <div class="receipt-row">
+                                <span class="r-label">استلمنا من السيد / السادة:</span>
+                                <strong class="r-value" id="disp-receipt-payer">شركة الاستثمارات المستقبلية والتطوير العقاري</strong>
+                            </div>
+                            <div class="receipt-row highlight-tafqeet">
+                                <span class="r-label">مبلغ وقدره (بالحروف):</span>
+                                <strong class="r-value" id="disp-receipt-tafqeet">فقط مائة وخمسون ألف ريال سعودي لا غير.</strong>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="r-label">طريقة السداد:</span>
+                                <div class="r-value-pills">
+                                    <span class="pay-pill" id="disp-receipt-pay-method-badge">💳 تحويل بنكي</span>
+                                    <span class="pay-sub-info" id="disp-receipt-cheque-info" style="display:none;"></span>
+                                </div>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="r-label">وذلك مقابل / عن:</span>
+                                <p class="r-value" id="disp-receipt-reason">الدفعة الأولى المستحقة بموجب العقد رقم (2026/04) الخاص بتوريد وتركيب كاميرات المراقبة والأنظمة الأمنية.</p>
+                            </div>
+                        </div>
+
+                        <div class="receipt-signatures-grid">
+                            <div class="r-sig-col">
+                                <p class="sig-title">المحاسب / المستلم</p>
+                                <div class="sig-line"></div>
+                                <p class="sig-name" id="disp-receipt-accountant">أحمد بن صالح</p>
+                            </div>
+                            <div class="r-sig-col">
+                                <p class="sig-title">توقيع المودع / المسلم</p>
+                                <div class="sig-line"></div>
+                                <p class="sig-name" id="disp-receipt-payer-sign">شركة الاستثمارات المستقبلية</p>
+                            </div>
+                            <div class="r-sig-col">
+                                <p class="sig-title">يعتمد (المدير المالي)</p>
+                                <div class="sig-space">
+                                    <div class="official-seal-badge straight-seal" style="margin:0 auto; transform:scale(0.85);">
+                                        <div class="seal-inner-circle">
+                                            <div class="seal-text-ar">المكتب العاشر</div>
+                                            <div class="seal-text-sub">قبض معتمد</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="sig-name" id="disp-receipt-manager">م. عبدالملك بن سلطان</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- MAIN LETTER / CONTRACT BODY PAGE 1 -->
+                    <article class="paper-content-body" id="paper-letter-body-box">
+                        <!-- Recipient Title -->
+                        <div class="recipient-box">
+                            <h3 class="disp-recipient">السادة / شركة الاستثمارات المستقبلية المحترمين</h3>
+                        </div>
+
+                        <!-- Subject Line -->
+                        <div class="subject-box">
+                            <h4 class="disp-subject">الموضوع: اعتماد الشراكة الاستثمارية ومذكرة التفاهم للربع الثالث 2026</h4>
+                        </div>
+
+                        <!-- Salutation -->
+                        <p class="salutation-text disp-salutation">السلام عليكم ورحمة الله وبركاته،،،</p>
+
+                        <!-- CONTRACT PARTIES DISPLAY BOX (STANDALONE CONTRACT MODE) -->
+                        <div class="contract-parties-box paper-contract-parties-box" style="display: none;">
+                            <div class="party-col">
+                                <h4>🏢 الطرف الأول (المؤسسة/الشركة):</h4>
+                                <p><strong class="display-co-ar">شركة المكتب العاشر القابضة</strong> (س.ت: <span class="val-cr">7003400145</span>)</p>
+                                <p>ويمثلها بالتوقيع: <span class="disp-p1-rep">م. عبدالملك بن سلطان (الرئيس التنفيذي)</span></p>
+                            </div>
+                            <div class="party-col">
+                                <h4>👤 الطرف الثاني (العميل/المقاول):</h4>
+                                <p><strong class="disp-p2-name">شركة الاستثمارات المستقبلية والتطوير</strong> (س.ت: <span class="disp-p2-cr">1010998877</span>)</p>
+                                <p>ويمثلها بالتوقيع: <span class="disp-p2-rep">سعادة الأستاذ / خالد بن أحمد Al-Otaibi</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Paragraph Content -->
+                        <div class="body-text-paragraphs disp-body-paragraphs">
+                            <!-- Dynamic Content Rendered Here -->
+                        </div>
+
+                        <!-- DYNAMIC OFFICIAL TABLE DISPLAY CONTAINER -->
+                        <div class="paper-table-wrapper paper-table-wrapper" style="display: block;">
+                            <table class="paper-table table-theme-royal paper-dynamic-table">
+                                <thead>
+                                    <tr class="paper-table-head-tr">
+                                        <!-- Dynamic Table Headers -->
+                                    </tr>
+                                </thead>
+                                <tbody class="paper-table-body">
+                                    <!-- Dynamic Table Body Rows -->
+                                </tbody>
+                                <tfoot class="paper-table-tfoot">
+                                    <!-- VAT & Math Summary Rows Rendered Here -->
+                                </tfoot>
+                            </table>
+
+                            <!-- TAFQEET NUMBER-TO-WORDS DISPLAY -->
+                            <div class="tafqeet-box tafqeet-paper-box" style="display: block;">
+                                <span>المبلغ الإجمالي بالحروف: </span><strong class="tafqeet-text-disp">فقط مائة وسبعة وسبعون ألفاً وخمسمائة ريال سعودي لا غير.</strong>
+                            </div>
+                        </div>
+
+                        <!-- QUOTATION TERMS & CONDITIONS BOX -->
+                        <div class="quotation-terms-box" id="paper-quotation-terms-box" style="display: none;">
+                            <h4><i class="fa-solid fa-clipboard-check"></i> الشروط والتوصيات التجارية لعرض السعر:</h4>
+                            <div id="disp-quo-terms-list">
+                                <!-- Dynamic Terms Rendered Here -->
+                            </div>
+                        </div>
+
+                        <!-- SINGLE PAGE ONLY: SIGNATURES BLOCK -->
+                        <section class="dual-signatures-block paper-dual-signatures-block p1-only-signatures" style="display: none;">
+                            <div class="dual-sig-col">
+                                <p class="sig-title">توقيع وختم الطرف الأول</p>
+                                <p class="sig-name display-co-ar">شركة المكتب العاشر القابضة</p>
+                                <div class="sig-space">
+                                    <div class="official-seal-badge straight-seal" style="margin: 0 auto; transform: scale(0.85);">
+                                        <div class="seal-inner-circle">
+                                            <div class="seal-text-ar">المكتب العاشر</div>
+                                            <div class="seal-text-sub">معتمد</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="sig-rep disp-p1-rep-sign">م. عبدالملك بن سلطان</p>
+                            </div>
+                            <div class="dual-sig-col">
+                                <p class="sig-title">توقيع وختم الطرف الثاني</p>
+                                <p class="sig-name disp-p2-name-sign">شركة الاستثمارات المستقبلية</p>
+                                <div class="sig-space">
+                                    <div style="border: 2px dashed #CBD5E0; height: 60px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #A0AEC0; font-size: 0.7rem;">
+                                        موافق وموقع عليه من الطرف الثاني
+                                    </div>
+                                </div>
+                                <p class="sig-rep disp-p2-rep-sign">أ. خالد بن أحمد Al-Otaibi</p>
+                            </div>
+                        </section>
+
+                        <section class="paper-signature-section paper-single-signature-block p1-only-signatures">
+                            <div class="paper-qr-badge paper-qr-badge">
+                                <img class="qr-code-img" src="" alt="Verification QR">
+                                <span class="qr-label">وثيقة رسمية معتمدة</span>
+                            </div>
+                            <div class="signature-block">
+                                <p class="sign-company display-co-ar">شركة المكتب العاشر القابضة</p>
+                                <p class="sign-title black-sign-title disp-sign-title">الرئيس التنفيذي</p>
+                                <div class="signature-seal-wrapper">
+                                    <div class="signature-draw signature-draw-box" style="display: none;">
+                                        <img class="applied-signature-img" src="" alt="Applied Signature" style="width: 100%; height: 100%; object-fit: contain;">
+                                    </div>
+                                    <div class="official-seal-badge straight-seal official-seal">
+                                        <img class="custom-stamp-img" src="" alt="Custom Stamp" style="display:none; width:100%; height:100%; object-fit:contain;">
+                                        <div class="seal-inner-circle builtin-seal-container">
+                                            <img src="logo.jpg" class="seal-logo-small seal-small-logo-img" alt="Seal">
+                                            <div class="seal-text-ar disp-seal-top">المكتب العاشر</div>
+                                            <div class="seal-text-sub disp-seal-mid">موافق عليه</div>
+                                            <div class="seal-star disp-seal-bot">★ ★ ★</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="sign-name disp-sign-name">م. عبدالملك بن سلطان</p>
+                            </div>
+                        </section>
+                    </article>
+
+                    <!-- FOOTER SECTION PAGE 1 -->
+                    <footer class="paper-footer">
+                        <div class="footer-gold-line"></div>
+                        <div class="footer-details-grid">
+                            <div class="footer-col">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span class="disp-address">الرياض - برج المكتب العاشر - طريق الملك فهد</span>
+                            </div>
+                            <div class="footer-col">
+                                <i class="fa-solid fa-phone"></i>
+                                <span class="disp-phone">+966 11 400 1010</span>
+                            </div>
+                            <div class="footer-col">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span class="disp-email">info@tenthoffice.sa</span>
+                            </div>
+                            <div class="footer-col">
+                                <i class="fa-solid fa-globe"></i>
+                                <span class="disp-web">www.tenthoffice.sa</span>
+                            </div>
+                        </div>
+                        <div class="footer-cr-bar">
+                            <span><strong class="display-co-ar">شركة المكتب العاشر القابضة</strong> - سجل تجاري: <strong class="val-cr">7003400145</strong> | الرقم الضريبي: <strong class="val-vat">300123456700003</strong></span>
+                            <span class="page-num-badge" style="float: left; font-weight: 700; color: var(--gold-primary);" id="p1-page-num">صفحة 1 من 1</span>
+                        </div>
+                    </footer>
+                </div>
+
+                <!-- PAGE 2 CONTAINER (VISIBLE IN MULTI-PAGE MODE) -->
+                <div class="a4-page template-executive page-break-before" id="letterhead-page-2" style="display: none;">
+                    
+                    <!-- Background Watermark -->
+                    <div class="watermark-container">
+                        <img src="logo.jpg" class="paper-watermark-img" alt="Watermark">
+                    </div>
+
+                    <!-- Outer Luxury Pinstripe Frame -->
+                    <div class="outer-pinstripe-frame">
+                        <div class="inner-frame-border"></div>
+                    </div>
+
+                    <!-- STANDALONE CONTRACT LIFECYCLE BADGE BAR -->
+                    <div class="contract-status-bar status-draft" style="display: none;">
+                        <span class="contract-status-text">🟡 مسودة عقد - غير نهائي (Draft)</span>
+                    </div>
+
+                    <!-- TOP HEADER SECTION PAGE 2 -->
+                    <header class="paper-header">
+                        <div class="header-brand-ar">
+                            <h2 class="display-co-ar">شركة المكتب العاشر القابضة</h2>
+                            <p class="display-co-sub">شركة قابضة واستثمارية</p>
+                            <span class="display-co-cr">س.ت: <strong class="val-cr">7003400145</strong> | الرقم الضريبي: <strong class="val-vat">300123456700003</strong></span>
+                        </div>
+                        <div class="header-logo-wrapper">
+                            <div class="logo-gold-ring">
+                                <img src="logo.jpg" class="paper-main-logo-img" alt="Logo">
+                            </div>
+                        </div>
+                        <div class="header-brand-en">
+                            <h2 class="display-co-en">TENTH OFFICE</h2>
+                            <p class="display-co-en-sub">HOLDING COMPANY</p>
+                            <span class="display-co-cr-en"><strong class="val-cr-en">C.R. 7003400145</strong> | VAT: <strong class="val-vat-en">300123456700003</strong></span>
+                        </div>
+                    </header>
+
+                    <!-- Decorative Header Gold Line Divider -->
+                    <div class="header-divider-line">
+                        <div class="diamond-accent">◆</div>
+                    </div>
+
+                    <!-- PAGE 2 CONTENT (LEGAL CLAUSES, BANK CARD, DUAL SIGNATURES) -->
+                    <article class="paper-content-body">
+                        <!-- STANDALONE LEGAL CLAUSES DISPLAY BOX -->
+                        <div class="legal-clauses-container paper-legal-clauses-box" style="display: block;">
+                            <h4 class="legal-title"><i class="fa-solid fa-scale-balanced"></i> البنود والشروط القانونية المعتمدة بالعقد:</h4>
+                            <div class="legal-clauses-list-p2">
+                                <!-- Dynamic Clauses Rendered Here -->
+                            </div>
+                        </div>
+
+                        <!-- OFFICIAL BANK ACCOUNT CARD -->
+                        <div class="paper-bank-card paper-bank-card-p2" style="display: block;">
+                            <div class="bank-card-header"><i class="fa-solid fa-building-columns"></i> بيانات الحساب البنكي المعتمد للسداد:</div>
+                            <div class="bank-card-grid">
+                                <div><span>البنك:</span> <strong class="disp-bank-name">البنك الأهلي السعودي (SNB)</strong></div>
+                                <div><span>اسم الحساب:</span> <strong class="disp-bank-holder">شركة المكتب العاشر القابضة</strong></div>
+                                <div class="col-span-2"><span>الآيبان IBAN:</span> <strong class="disp-bank-iban">SA44 1000 0001 2345 6789 0101</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Closing -->
+                        <p class="closing-text disp-closing">وتقبلوا فائق الاحترام والتقدير،،،</p>
+
+                        <!-- DUAL PARTIES SIGNATURE & SEAL BLOCK PAGE 2 -->
+                        <section class="dual-signatures-block paper-dual-signatures-block-p2" style="display: grid;">
+                            <div class="dual-sig-col">
+                                <p class="sig-title">توقيع وختم الطرف الأول</p>
+                                <p class="sig-name display-co-ar">شركة المكتب العاشر القابضة</p>
+                                <div class="sig-space">
+                                    <div class="official-seal-badge straight-seal" style="margin: 0 auto; transform: scale(0.85);">
+                                        <div class="seal-inner-circle">
+                                            <div class="seal-text-ar">المكتب العاشر</div>
+                                            <div class="seal-text-sub">معتمد</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="sig-rep disp-p1-rep-sign">م. عبدالملك بن سلطان</p>
+                            </div>
+                            <div class="dual-sig-col">
+                                <p class="sig-title">توقيع وختم الطرف الثاني</p>
+                                <p class="sig-name disp-p2-name-sign">شركة الاستثمارات المستقبلية</p>
+                                <div class="sig-space">
+                                    <div style="border: 2px dashed #CBD5E0; height: 60px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #A0AEC0; font-size: 0.7rem;">
+                                        موافق وموقع عليه من الطرف الثاني
+                                    </div>
+                                </div>
+                                <p class="sig-rep disp-p2-rep-sign">أ. خالد بن أحمد Al-Otaibi</p>
+                            </div>
+                        </section>
+
+                        <section class="paper-signature-section paper-single-signature-block-p2" style="display: none;">
+                            <div class="paper-qr-badge">
+                                <img class="qr-code-img" src="" alt="Verification QR">
+                                <span class="qr-label">وثيقة رسمية معتمدة</span>
+                            </div>
+                            <div class="signature-block">
+                                <p class="sign-company display-co-ar">شركة المكتب العاشر القابضة</p>
+                                <p class="sign-title black-sign-title disp-sign-title">الرئيس التنفيذي</p>
+                                <div class="signature-seal-wrapper">
+                                    <div class="signature-draw signature-draw-box" style="display: none;">
+                                        <img class="applied-signature-img" src="" alt="Applied Signature" style="width: 100%; height: 100%; object-fit: contain;">
+                                    </div>
+                                    <div class="official-seal-badge straight-seal official-seal">
+                                        <img class="custom-stamp-img" src="" alt="Custom Stamp" style="display:none; width:100%; height:100%; object-fit:contain;">
+                                        <div class="seal-inner-circle builtin-seal-container">
+                                            <img src="logo.jpg" class="seal-logo-small seal-small-logo-img" alt="Seal">
+                                            <div class="seal-text-ar disp-seal-top">المكتب العاشر</div>
+                                            <div class="seal-text-sub disp-seal-mid">موافق عليه</div>
+                                            <div class="seal-star disp-seal-bot">★ ★ ★</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="sign-name disp-sign-name">م. عبدالملك بن سلطان</p>
+                            </div>
+                        </section>
+                    </article>
+
+                    <!-- FOOTER SECTION PAGE 2 -->
+                    <footer class="paper-footer">
+                        <div class="footer-gold-line"></div>
+                        <div class="footer-details-grid">
+                            <div class="footer-col">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span class="disp-address">الرياض - برج المكتب العاشر - طريق الملك فهد</span>
+                            </div>
+                            <div class="footer-col">
+                                <i class="fa-solid fa-phone"></i>
+                                <span class="disp-phone">+966 11 400 1010</span>
+                            </div>
+                            <div class="footer-col">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span class="disp-email">info@tenthoffice.sa</span>
+                            </div>
+                            <div class="footer-col">
+                                <i class="fa-solid fa-globe"></i>
+                                <span class="disp-web">www.tenthoffice.sa</span>
+                            </div>
+                        </div>
+                        <div class="footer-cr-bar">
+                            <span><strong class="display-co-ar">شركة المكتب العاشر القابضة</strong> - سجل تجاري: <strong class="val-cr">7003400145</strong> | الرقم الضريبي: <strong class="val-vat">300123456700003</strong></span>
+                            <span class="page-num-badge" style="float: left; font-weight: 700; color: var(--gold-primary);">صفحة 2 من 2</span>
+                        </div>
+                    </footer>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- ARCHIVE MODAL DRAWER -->
+    <div class="modal-overlay no-print" id="archive-modal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-box-archive"></i> أرشيف الخطابات والعقود والسندات والمحاضر</h3>
+                <button class="modal-close-btn" onclick="closeArchiveModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="archive-search-bar">
+                    <input type="text" id="archive-search-input" class="form-control" placeholder="ابحث باسم المستلم، الموضوع، التاريخ، أو الرقم الإشاري..." oninput="renderArchiveList()">
+                </div>
+                <div class="archive-list-container" id="archive-list-container">
+                    <!-- Dynamic Archive Cards Rendered Here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>
