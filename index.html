@@ -518,7 +518,7 @@
                 </div>
             </div>
 
-            <!-- GROUP 4: DESIGN, STAMPS & DIGITAL SIGNATURE -->
+            <!-- GROUP 4: DESIGN, STAMPS & DIGITAL SIGNATURE (ENHANCED SEALS & SIGNATURES) -->
             <div id="group-design" class="tab-group-content">
                 <div class="section-card">
                     <h3><i class="fa-solid fa-layer-group"></i> اختيار قالب الخطاب الفاخر</h3>
@@ -542,10 +542,70 @@
                     </div>
                 </div>
 
+                <!-- ENHANCED OFFICIAL SEAL ENGINE -->
                 <div class="section-card">
-                    <h3><i class="fa-solid fa-stamp"></i> الختم الرسمي وأختام الاعتماد</h3>
+                    <h3><i class="fa-solid fa-stamp"></i> إدارة وتعديل الختم الرسمي</h3>
+                    <div class="form-group checkbox-group mb-2">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="show-seal-check" checked onchange="toggleSeal(this.checked)">
+                            <span class="checkmark"></span> إظهار الختم الرسمي في الوثيقة
+                        </label>
+                    </div>
+
                     <div class="form-group">
-                        <label>ختم حالة الاعتماد المالي:</label>
+                        <label><i class="fa-solid fa-upload"></i> 1. رفع صورة ختم خاص (PNG / JPG):</label>
+                        <div class="file-upload-box">
+                            <input type="file" id="stamp-file-input" accept="image/*" onchange="handleStampUpload(event)">
+                            <button class="btn btn-outline btn-block mb-1" onclick="document.getElementById('stamp-file-input').click()">
+                                <i class="fa-solid fa-file-image"></i> رفع ختم من جهازك...
+                            </button>
+                            <button class="btn btn-secondary btn-block" onclick="removeUploadedStamp()">
+                                <i class="fa-solid fa-rotate-left"></i> العودة للختم المصمم الافتراضي
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-font"></i> 2. تخصيص نصوص الختم المصمم التلقائي:</label>
+                        <div class="form-group mb-1">
+                            <label style="font-size:0.75rem;">السطر العلوي:</label>
+                            <input type="text" id="input-seal-top" class="form-control" value="المكتب العاشر" oninput="updateSealTexts()">
+                        </div>
+                        <div class="form-group mb-1">
+                            <label style="font-size:0.75rem;">النص الأوسط:</label>
+                            <input type="text" id="input-seal-mid" class="form-control" value="موافق عليه" oninput="updateSealTexts()">
+                        </div>
+                        <div class="form-group mb-1">
+                            <label style="font-size:0.75rem;">السطر السفلي:</label>
+                            <input type="text" id="input-seal-bot" class="form-control" value="س.ت 7003400145" oninput="updateSealTexts()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-palette"></i> لون حبر الختم:</label>
+                        <div class="color-presets">
+                            <button class="color-btn" style="background: #002B66;" onclick="setSealInk('#002B66')" title="كحلي مقاولات"></button>
+                            <button class="color-btn" style="background: #1A365D;" onclick="setSealInk('#1A365D')" title="أزرق ملكي"></button>
+                            <button class="color-btn active" style="background: #C5A059;" onclick="setSealInk('#C5A059')" title="ذهبي فاخر"></button>
+                            <button class="color-btn" style="background: #A71D31;" onclick="setSealInk('#A71D31')" title="أحمر اعتمادات"></button>
+                            <button class="color-btn" style="background: #276749;" onclick="setSealInk('#276749')" title="أخضر رسمي"></button>
+                            <button class="color-btn" style="background: #1A1A1A;" onclick="setSealInk('#1A1A1A')" title="أسود داكن"></button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label>دوران الختم:</label>
+                            <input type="range" id="seal-rotate" min="-45" max="45" value="0" class="form-control" oninput="updateSealTransform()">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>حجم الختم (px):</label>
+                            <input type="range" id="seal-size" min="50" max="120" value="80" class="form-control" oninput="updateSealTransform()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-stamp"></i> ختم حالة الاعتماد المالي (Overlay):</label>
                         <select id="financial-stamp-select" class="form-control" onchange="setFinancialStampOverlay(this.value)">
                             <option value="none" selected>بدون ختم حالة مالي</option>
                             <option value="stamp-paid">🟢 مدفوع / PAID</option>
@@ -554,40 +614,45 @@
                             <option value="stamp-rejected">🔴 مرفوض / Pending Revision</option>
                         </select>
                     </div>
+                </div>
+
+                <!-- ENHANCED OFFICIAL SIGNATURE ENGINE (FILE UPLOAD & TOUCH CANVAS) -->
+                <div class="section-card">
+                    <h3><i class="fa-solid fa-pen-nib"></i> إدارة وإضافة التوقيع الرسمي</h3>
+                    
+                    <div class="form-group checkbox-group mb-2">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="show-signature-check" checked onchange="toggleSignatureDisplay(this.checked)">
+                            <span class="checkmark"></span> إظهار التوقيع الرسمي في الوثيقة
+                        </label>
+                    </div>
+
+                    <!-- METHOD A: UPLOAD SIGNATURE IMAGE FILE -->
                     <div class="form-group">
-                        <label>رفع صورة ختم مخصص (PNG/JPG):</label>
+                        <label><i class="fa-solid fa-file-arrow-up"></i> 1. رفع صورة توقيع من جهازك (PNG / JPG):</label>
                         <div class="file-upload-box">
-                            <input type="file" id="stamp-file-input" accept="image/*" onchange="handleStampUpload(event)">
-                            <button class="btn btn-outline btn-block" onclick="document.getElementById('stamp-file-input').click()">
-                                <i class="fa-solid fa-upload"></i> رفع ختم هذه الشركة
+                            <input type="file" id="sig-file-input" accept="image/*" onchange="handleSignatureFileUpload(event)">
+                            <button class="btn btn-outline btn-block mb-1" onclick="document.getElementById('sig-file-input').click()">
+                                <i class="fa-solid fa-upload"></i> رفع صورة توقيع (PNG شفافة)...
+                            </button>
+                            <button class="btn btn-secondary btn-block" onclick="removeUploadedSignature()">
+                                <i class="fa-solid fa-trash"></i> حذف صورة التوقيع المرفوعة
                             </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>لون حبر الختم المصمم:</label>
-                        <div class="color-presets">
-                            <button class="color-btn" style="background: #002B66;" onclick="setSealInk('#002B66')" title="أزرق المقاولات"></button>
-                            <button class="color-btn" style="background: #1A365D;" onclick="setSealInk('#1A365D')" title="أزرق رسمي"></button>
-                            <button class="color-btn active" style="background: #C5A059;" onclick="setSealInk('#C5A059')" title="ذهبي ملكي"></button>
-                            <button class="color-btn" style="background: #A71D31;" onclick="setSealInk('#A71D31')" title="أحمر ملائم"></button>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- LIVE DIGITAL SIGNATURE PAD -->
-                <div class="section-card">
-                    <h3><i class="fa-solid fa-pen-nib"></i> التوقيع الرقمي التفاعلي (Signature Canvas)</h3>
-                    <div class="canvas-signature-box">
-                        <label>ارسم توقيعك بالماوس أو اللمس:</label>
+                    <!-- METHOD B: TOUCH & MOUSE SIGNATURE CANVAS -->
+                    <div class="canvas-signature-box mt-2">
+                        <label><i class="fa-solid fa-signature"></i> 2. أو ارسم توقيعك بالماوس / اللمس:</label>
                         <div class="canvas-wrapper">
                             <canvas id="sig-pad" width="360" height="110"></canvas>
                         </div>
                         <div class="form-row mt-2">
                             <button class="btn btn-secondary col-6" onclick="clearSignatureCanvas()">
-                                <i class="fa-solid fa-eraser"></i> مسح
+                                <i class="fa-solid fa-eraser"></i> مسح اللوحة
                             </button>
                             <button class="btn btn-gold col-6" onclick="applySignatureCanvas()">
-                                <i class="fa-solid fa-check"></i> اعتماد التوقيع
+                                <i class="fa-solid fa-check"></i> اعتماد التوقيع المرسوم
                             </button>
                         </div>
                     </div>
@@ -1078,7 +1143,7 @@
     <div class="modal-overlay no-print" id="archive-modal" style="display: none;">
         <div class="modal-card">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-box-archive"></i> أرشيف الخطابات والعقود والسندات والمحاضر</h3>
+                <h3><i class="fa-solid fa-box-archive"></i> أرشيف الخطابات والعقود بالسندات والمحاضر</h3>
                 <button class="modal-close-btn" onclick="closeArchiveModal()">&times;</button>
             </div>
             <div class="modal-body">

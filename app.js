@@ -1173,6 +1173,40 @@ function applySignatureCanvas() {
     document.querySelectorAll('.signature-draw-box').forEach(el => el.style.display = 'block');
 }
 
+// Signature Image File Upload Handler
+function handleSignatureFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.querySelectorAll('.applied-signature-img').forEach(imgElem => {
+            imgElem.src = e.target.result;
+        });
+        document.querySelectorAll('.signature-draw-box').forEach(el => {
+            el.style.display = 'block';
+        });
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeUploadedSignature() {
+    document.querySelectorAll('.applied-signature-img').forEach(imgElem => {
+        imgElem.src = '';
+    });
+    document.querySelectorAll('.signature-draw-box').forEach(el => {
+        el.style.display = 'none';
+    });
+    const sigInput = safeGet('sig-file-input');
+    if (sigInput) sigInput.value = '';
+}
+
+function toggleSignatureDisplay(show) {
+    document.querySelectorAll('.paper-signature-section').forEach(el => {
+        el.style.display = show ? 'flex' : 'none';
+    });
+}
+
 // QR Code Generator (ZATCA VAT & Security Specs)
 function updateQrCode() {
     const comp = companiesData[activeCompanyId];
@@ -1527,6 +1561,11 @@ function updateWatermarkOpacity(val) {
     document.querySelectorAll('.watermark-container').forEach(wm => wm.style.opacity = val);
 }
 
+// Seals & Signature Visibility Toggles
+function toggleSeal(show) {
+    document.querySelectorAll('.official-seal').forEach(seal => seal.style.display = show ? 'flex' : 'none');
+}
+
 // Custom Stamp Handling & Styling
 function handleStampUpload(event) {
     const file = event.target.files[0];
@@ -1534,6 +1573,9 @@ function handleStampUpload(event) {
 
     const reader = new FileReader();
     reader.onload = function(e) {
+        const comp = companiesData[activeCompanyId];
+        if (comp) comp.sealImg = e.target.result;
+
         document.querySelectorAll('.custom-stamp-img').forEach(customImg => {
             customImg.src = e.target.result;
             customImg.style.display = 'block';
@@ -1550,6 +1592,9 @@ function handleStampUpload(event) {
 }
 
 function removeUploadedStamp() {
+    const comp = companiesData[activeCompanyId];
+    if (comp) comp.sealImg = '';
+
     document.querySelectorAll('.custom-stamp-img').forEach(customImg => {
         customImg.src = '';
         customImg.style.display = 'none';
@@ -1561,10 +1606,25 @@ function removeUploadedStamp() {
         sealBadge.style.background = 'rgba(255, 255, 255, 0.95)';
         sealBadge.style.boxShadow = '0 4px 10px rgba(0,0,0,0.08)';
     });
+    const stampInput = safeGet('stamp-file-input');
+    if (stampInput) stampInput.value = '';
 }
 
 function setSealInk(colorHex) {
     document.documentElement.style.setProperty('--seal-ink', colorHex);
+}
+
+function updateSealTransform() {
+    const rotateInput = safeGet('seal-rotate');
+    const sizeInput = safeGet('seal-size');
+    const rotateVal = rotateInput ? rotateInput.value : 0;
+    const sizeVal = sizeInput ? sizeInput.value : 80;
+
+    document.querySelectorAll('.official-seal-badge').forEach(sealBadge => {
+        sealBadge.style.transform = `rotate(${rotateVal}deg)`;
+        sealBadge.style.width = `${sizeVal}px`;
+        sealBadge.style.height = `${sizeVal}px`;
+    });
 }
 
 function updateSealTexts() {
