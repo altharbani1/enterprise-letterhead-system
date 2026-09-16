@@ -1618,7 +1618,7 @@ function updateSealTransform() {
     const rotateInput = safeGet('seal-rotate');
     const sizeInput = safeGet('seal-size');
     const rotateVal = rotateInput ? rotateInput.value : 0;
-    const sizeVal = sizeInput ? sizeInput.value : 80;
+    const sizeVal = sizeInput ? sizeInput.value : 96;
 
     document.querySelectorAll('.official-seal-badge').forEach(sealBadge => {
         sealBadge.style.transform = `rotate(${rotateVal}deg)`;
