@@ -80,6 +80,33 @@ const companiesData = {
         bankHolder: "مؤسسة تبادل الشرق للمقاولات",
         bankIban: "SA12 2000 0009 8765 4321 0303",
         bankSwift: "RIBLSARI"
+    },
+    "company_4": {
+        id: "company_4",
+        code: "HAM",
+        arName: "مؤسسة همس الأمانة للتجارة",
+        subAr: "التجارة العامة والاستيراد والتصدير",
+        enName: "HAMS AL-AMANAH",
+        enSub: "TRADING ESTABLISHMENT",
+        cr: "7005678901",
+        vat: "307788990000003",
+        phone: "+966 55 889 9000",
+        email: "info@hamsalamanah.sa",
+        web: "www.hamsalamanah.sa",
+        address: "الرياض - طريق الإمام سعود بن عبدالعزيز - حي النزهة",
+        primaryColor: "#2E7D32",
+        darkColor: "#1B5E20",
+        logoImg: "logo.jpg",
+        sealImg: "",
+        template: "template-executive",
+        sealInk: "#2E7D32",
+        sealTop: "همس الأمانة للتجارة",
+        sealMid: "معتمد / APPROVED",
+        sealBot: "س.ت 7005678901",
+        bankName: "مصرف الإنماء (Alinma Bank)",
+        bankHolder: "مؤسسة همس الأمانة للتجارة",
+        bankIban: "SA55 0500 0000 1234 5678 0404",
+        bankSwift: "INMASARI"
     }
 };
 
