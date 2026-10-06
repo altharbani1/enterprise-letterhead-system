@@ -107,6 +107,33 @@ const companiesData = {
         bankHolder: "مؤسسة همس الأمانة للتجارة",
         bankIban: "SA55 0500 0000 1234 5678 0404",
         bankSwift: "INMASARI"
+    },
+    "company_5": {
+        id: "company_5",
+        code: "MGS",
+        arName: "شركة الجيل الحديث للأنظمة والسلامة",
+        subAr: "أنظمة السلامة والوقاية والحماية من الحريق والأنظمة الكهروميكانيكية",
+        enName: "MODERN GENERATION",
+        enSub: "SYSTEMS & SAFETY CO.",
+        cr: "7035992853",
+        vat: "303599285300003",
+        phone: "+966 11 499 8080",
+        email: "info@mgsafety.sa",
+        web: "www.mgsafety.sa",
+        address: "الرياض - طريق الملك عبد العزيز - حي صلاح الدين",
+        primaryColor: "#C62828",
+        darkColor: "#7f0000",
+        logoImg: "logo.jpg",
+        sealImg: "",
+        template: "template-executive",
+        sealInk: "#C62828",
+        sealTop: "الجيل الحديث للأنظمة والسلامة",
+        sealMid: "MGS SAFETY / معتمد",
+        sealBot: "س.ت 7035992853",
+        bankName: "البنك السعودي الأول (SAB)",
+        bankHolder: "شركة الجيل الحديث للأنظمة والسلامة",
+        bankIban: "SA66 3000 0000 7035 9928 5305",
+        bankSwift: "SABBRIYH"
     }
 };
 
