@@ -1533,6 +1533,41 @@ function handleCompanyLogoUpload(event) {
     reader.readAsDataURL(file);
 }
 
+// Dynamic Font Size Engine for Letter Body Text
+const fontSizeOptions = [
+    { label: "12px", value: "0.75rem" },
+    { label: "14px", value: "0.88rem" },
+    { label: "16px", value: "1.0rem" },
+    { label: "18px", value: "1.15rem" },
+    { label: "20px", value: "1.30rem" },
+    { label: "23px", value: "1.45rem" }
+];
+let currentFontSizeIndex = 1; // Default 14px (0.88rem)
+
+function changeBodyFontSize(sizeVal) {
+    const idx = fontSizeOptions.findIndex(opt => opt.value === sizeVal);
+    if (idx !== -1) currentFontSizeIndex = idx;
+    applyBodyFontSize();
+}
+
+function stepBodyFontSize(step) {
+    currentFontSizeIndex += step;
+    if (currentFontSizeIndex < 0) currentFontSizeIndex = 0;
+    if (currentFontSizeIndex >= fontSizeOptions.length) currentFontSizeIndex = fontSizeOptions.length - 1;
+
+    const opt = fontSizeOptions[currentFontSizeIndex];
+    safeSetValue('body-font-size-select', opt.value);
+    applyBodyFontSize();
+}
+
+function applyBodyFontSize() {
+    const opt = fontSizeOptions[currentFontSizeIndex];
+    document.querySelectorAll('.disp-body-paragraphs, .body-text-paragraphs').forEach(el => {
+        el.style.fontSize = opt.value;
+    });
+    safeSetText('body-font-size-label', opt.label);
+}
+
 // Live Content Updating
 function updateContent() {
     const recipVal = safeGet('input-recipient') ? safeGet('input-recipient').value : '';
@@ -1562,6 +1597,7 @@ function updateContent() {
 
     document.querySelectorAll('.disp-sign-name').forEach(el => el.textContent = signNameVal);
     document.querySelectorAll('.disp-sign-title').forEach(el => el.textContent = signTitleVal);
+    applyBodyFontSize();
     updateQrCode();
 }
 

@@ -271,6 +271,23 @@
 
 نؤكد لكم حرص شركة المكتب العاشر القابضة على دفع عجلة الاستثمار المشترك وتحقيق تطلعات الشركاء وفق أعلى معايير الحوكمة والجودة.</textarea>
                         </div>
+                        <div class="form-group mt-2 mb-2">
+                            <label><i class="fa-solid fa-text-height" style="color: var(--gold-primary);"></i> التحكم بحجم خط نص الخطاب:</label>
+                            <div class="form-row" style="align-items: center; gap: 6px;">
+                                <select id="body-font-size-select" class="form-control col-7" onchange="changeBodyFontSize(this.value)">
+                                    <option value="0.75rem">صغير (12px)</option>
+                                    <option value="0.88rem" selected>عادي (14px) - الافتراضي</option>
+                                    <option value="1.0rem">متوسط (16px)</option>
+                                    <option value="1.15rem">كبير (18px)</option>
+                                    <option value="1.30rem">كبير جداً (20px)</option>
+                                    <option value="1.45rem">ضخم (23px)</option>
+                                </select>
+                                <div class="col-5 btn-group" style="display: flex; gap: 4px;">
+                                    <button type="button" class="btn btn-secondary col-6" onclick="stepBodyFontSize(-1)" title="تصغير الخط (A-)"><i class="fa-solid fa-minus"></i> A-</button>
+                                    <button type="button" class="btn btn-gold col-6" onclick="stepBodyFontSize(1)" title="تكبير الخط (A+)"><i class="fa-solid fa-plus"></i> A+</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>عبارة الختام:</label>
                             <input type="text" id="input-closing" class="form-control" value="وتقبلوا فائق الاحترام والتقدير،،،" oninput="updateContent()">
@@ -691,10 +708,16 @@
         <main class="preview-area">
             <div class="preview-toolbar no-print">
                 <div class="zoom-controls">
-                    <button class="zoom-btn" onclick="adjustZoom(-0.05)" title="تصغير"><i class="fa-solid fa-minus"></i></button>
+                    <button class="zoom-btn" onclick="adjustZoom(-0.05)" title="تصغير المعاينة"><i class="fa-solid fa-minus"></i></button>
                     <span id="zoom-level">100%</span>
-                    <button class="zoom-btn" onclick="adjustZoom(0.05)" title="تكبير"><i class="fa-solid fa-plus"></i></button>
+                    <button class="zoom-btn" onclick="adjustZoom(0.05)" title="تكبير المعاينة"><i class="fa-solid fa-plus"></i></button>
                     <button class="zoom-btn" onclick="resetZoom()" title="إعادة تعيين"><i class="fa-solid fa-expand"></i></button>
+                </div>
+                <div class="zoom-controls" style="margin-left: 10px;">
+                    <span style="font-size:0.75rem; color:#A0AEC0; font-weight:bold; margin-left:4px;"><i class="fa-solid fa-font"></i> خط الخطاب:</span>
+                    <button class="zoom-btn" onclick="stepBodyFontSize(-1)" title="تصغير خط نص الخطاب (A-)"><i class="fa-solid fa-minus"></i></button>
+                    <span id="body-font-size-label" style="font-size: 0.8rem; font-weight: 600; min-width: 40px; text-align: center; color: var(--gold-primary);">14px</span>
+                    <button class="zoom-btn" onclick="stepBodyFontSize(1)" title="تكبير خط نص الخطاب (A+)"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 <div class="preview-info">
                     <i class="fa-solid fa-shield-halved" style="color: #48BB78;"></i> وثيقة رسمية موثقة برمز استجابة وتوقيع معتمد
